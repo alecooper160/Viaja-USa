@@ -128,7 +128,8 @@
         const apiKey = "AIzaSyCXFK8ACvbUAyve5e-D6SHOcHex6xVbpc4"; 
 
         async function callGemini(prompt, systemMsg, retries = 3) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            // Se cambió el modelo a gemini-1.5-flash para mayor estabilidad
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
             
             for (let i = 0; i < retries; i++) {
                 try {
@@ -136,8 +137,10 @@
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            contents: [{ parts: [{ text: prompt }] }],
-                            systemInstruction: { parts: [{ text: systemMsg }] }
+                            contents: [{ 
+                                role: "user",
+                                parts: [{ text: `INSTRUCCIÓN DE SISTEMA: ${systemMsg}\n\nUSUARIO: ${prompt}` }] 
+                            }]
                         })
                     });
 
@@ -206,7 +209,7 @@
             box.scrollTop = box.scrollHeight;
         }
 
-        document.getElementById('user-input').addEventListener('keypress', (e) => {
+            document.getElementById('user-input').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') sendMessage();
         });
     </script>
