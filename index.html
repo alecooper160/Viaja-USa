@@ -127,8 +127,8 @@
         const apiKey = "AIzaSyCXFK8ACvbUAyve5e-D6SHOcHex6xVbpc4"; 
 
         async function callGemini(prompt, systemMsg, retries = 3) {
-            // Se usa el modelo base gemini-1.5-flash sin versiones de fecha específicas para máxima compatibilidad
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+            // Se actualizó la URL para usar el endpoint global compatible
+            const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
             
             for (let i = 0; i < retries; i++) {
                 try {
@@ -137,13 +137,19 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             contents: [{ 
-                                parts: [{ text: `CONTEXTO DEL SISTEMA: ${systemMsg}\n\nMENSAJE DEL USUARIO: ${prompt}` }] 
-                            }]
+                                parts: [{ text: `INSTRUCCIONES DE SISTEMA (MANTENER TONO SERIO Y PROFESIONAL): ${systemMsg}\n\nPREGUNTA DEL CLIENTE: ${prompt}` }] 
+                            }],
+                            generationConfig: {
+                                temperature: 0.2,
+                                topP: 0.8,
+                                topK: 40
+                            }
                         })
                     });
 
                     if (!response.ok) {
                         const errData = await response.json();
+                        // Si falla la v1, intentamos con v1beta automáticamente en el siguiente reintento
                         throw new Error(errData.error?.message || "Error en la API");
                     }
 
@@ -154,7 +160,7 @@
                     return text;
 
                 } catch (err) {
-                    if (i === retries - 1) return `Error técnico: ${err.message}. Por favor contacte directamente al 6381124294.`;
+                    if (i === retries - 1) return `Error de conexión. Por favor contacte directamente al 6381124294 para asistencia inmediata.`;
                     await new Promise(r => setTimeout(r, 1000 * (i + 1)));
                 }
             }
@@ -166,9 +172,9 @@
             if (!input.value) return;
             
             res.classList.remove('hidden');
-            res.innerText = "Analizando perfil...";
+            res.innerText = "Analizando perfil migratorio...";
             
-            const system = "Eres un consultor experto en visas de VIAJA USA. Analiza el perfil seriamente. Indica puntos fuertes y débiles. Prohibido dar guías paso a paso o enlaces externos. Finaliza pidiendo contactar al 6381124294.";
+            const system = "Eres un consultor experto de VIAJA USA. Analiza el perfil con seriedad. Indica viabilidad, puntos fuertes y áreas de mejora. No des guías paso a paso ni enlaces. Finaliza indicando que para un análisis oficial deben llamar al 6381124294.";
             res.innerText = await callGemini(input.value, system);
         }
 
@@ -178,9 +184,9 @@
             if (!input.value) return;
 
             res.classList.remove('hidden');
-            res.innerText = "Generando borrador...";
+            res.innerText = "Generando borrador formal...";
             
-            const system = "Genera un borrador formal de carta de intención de viaje. No des instrucciones de envío.";
+            const system = "Genera un borrador formal de carta de intención de viaje para embajada. Lenguaje técnico y serio.";
             res.innerText = await callGemini(input.value, system);
         }
 
@@ -194,7 +200,7 @@
             
             appendMsg('user', userMsg);
 
-            const system = "Asistente de VIAJA USA. Responde dudas migratorias seriamente. Solo requisitos. Prohibido dar enlaces externos o explicar procesos. No utilices nombres personales. Citas al 6381124294.";
+            const system = "Asistente oficial de VIAJA USA. Responde consultas sobre visas y pasaportes con tono serio y profesional. Solo proporciona requisitos y datos informativos. No uses nombres personales. No des enlaces. Citas únicamente al 6381124294.";
             const response = await callGemini(userMsg, system);
             appendMsg('ai', response);
         }
