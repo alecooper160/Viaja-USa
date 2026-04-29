@@ -122,29 +122,26 @@
     </div>
 
     <script>
-        const apiKey = ""; // API Key se proporciona en el entorno de ejecución
+        // La clave se inyecta automáticamente si está vacía en este entorno
+        const apiKey = ""; 
 
         async function callGemini(prompt, systemMsg, retries = 5) {
-            // Se actualizó el modelo a gemini-2.5-flash-preview-09-2025 para compatibilidad garantizada
+            // Se utiliza el modelo compatible para el entorno de Canvas: gemini-2.5-flash-preview-09-2025
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
             
             for (let i = 0; i < retries; i++) {
                 try {
                     const response = await fetch(url, {
                         method: 'POST',
-                        headers: { 
-                            'Content-Type': 'application/json'
-                        },
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            contents: [{ 
-                                parts: [{ text: prompt }] 
-                            }],
+                            contents: [
+                                {
+                                    parts: [{ text: prompt }]
+                                }
+                            ],
                             systemInstruction: {
                                 parts: [{ text: systemMsg }]
-                            },
-                            generationConfig: {
-                                temperature: 0.1,
-                                maxOutputTokens: 800
                             }
                         })
                     });
@@ -152,21 +149,18 @@
                     const data = await response.json();
 
                     if (!response.ok) {
-                        if (response.status === 404 || response.status === 400) {
-                             console.error("Error en configuración de API:", data.error?.message);
-                             throw new Error("Configuración no válida");
-                        }
-                        throw new Error(data.error?.message || "Error desconocido");
+                        throw new Error(data.error?.message || "Error en la respuesta de la API");
                     }
 
                     const resultText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-                    if (!resultText) throw new Error("Respuesta incompleta");
+                    if (!resultText) throw new Error("La respuesta de la IA llegó vacía");
                     
                     return resultText;
 
                 } catch (err) {
                     console.error(`Intento ${i + 1} fallido:`, err.message);
-                    if (i === retries - 1) return `Lo sentimos, el servicio tiene un problema de configuración. Por favor llame al 638 112 4294.`;
+                    if (i === retries - 1) return `Lo sentimos, el servicio está experimentando dificultades. Por favor, contacte directamente a un asesor al 638 112 4294 para asistencia inmediata.`;
+                    // Tiempo de espera con retroceso exponencial
                     await new Promise(r => setTimeout(r, 1000 * Math.pow(2, i)));
                 }
             }
@@ -175,12 +169,12 @@
         async function analyzeProfile() {
             const input = document.getElementById('profile-text');
             const res = document.getElementById('analysis-result');
-            if (!input.value) return;
+            if (!input.value.trim()) return;
             
             res.classList.remove('hidden');
-            res.innerText = "Procesando información...";
+            res.innerText = "Analizando perfil migratorio...";
             
-            const system = "Consultor migratorio experto de VIAJA USA. Analiza el perfil con seriedad técnica en español. Indica viabilidad basada en lazos familiares y económicos. Prohibido dar procesos paso a paso. Cierre: llamar al 6381124294.";
+            const system = "Actúa como consultor migratorio experto de VIAJA USA. Analiza los lazos familiares y económicos descritos por el usuario en español. Ofrece una evaluación profesional y concisa sobre la viabilidad de su trámite. Sugiere llamar al 6381124294 para una cita personalizada.";
             const response = await callGemini(input.value, system);
             res.innerText = response;
         }
@@ -188,12 +182,12 @@
         async function generateLetter() {
             const input = document.getElementById('letter-purpose');
             const res = document.getElementById('letter-result');
-            if (!input.value) return;
+            if (!input.value.trim()) return;
 
             res.classList.remove('hidden');
-            res.innerText = "Redactando carta formal...";
+            res.innerText = "Redactando borrador formal...";
             
-            const system = "Genera un borrador de carta de intención de viaje para una solicitud de visa en español. Tono altamente formal y profesional.";
+            const system = "Genera un borrador de carta de intención de viaje formal y persuasiva para un trámite de visa en español. El tono debe ser profesional, respetuoso y diplomático.";
             const response = await callGemini(input.value, system);
             res.innerText = response;
         }
@@ -208,7 +202,7 @@
             
             appendMsg('user', userMsg);
 
-            const system = "Asistente Virtual de VIAJA USA en español. Proporciona requisitos generales de trámites migratorios. Tono serio y profesional. No menciones nombres. No des links. Citas al 6381124294.";
+            const system = "Eres el asistente inteligente de VIAJA USA. Responde dudas sobre visas, pasaportes y trámites migratorios en español de forma amable y profesional. Si no conoces un detalle legal específico, invita al usuario a llamar al 6381124294.";
             const response = await callGemini(userMsg, system);
             appendMsg('ai', response);
         }
