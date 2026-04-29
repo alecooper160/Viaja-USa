@@ -124,11 +124,10 @@
     </div>
 
     <script>
-        // API Key configurada
         const apiKey = "AIzaSyCXFK8ACvbUAyve5e-D6SHOcHex6xVbpc4"; 
 
         async function callGemini(prompt, systemMsg, retries = 3) {
-            // Se cambió el modelo a gemini-1.5-flash para mayor estabilidad
+            // Se usa el modelo base gemini-1.5-flash sin versiones de fecha específicas para máxima compatibilidad
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
             
             for (let i = 0; i < retries; i++) {
@@ -138,8 +137,7 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             contents: [{ 
-                                role: "user",
-                                parts: [{ text: `INSTRUCCIÓN DE SISTEMA: ${systemMsg}\n\nUSUARIO: ${prompt}` }] 
+                                parts: [{ text: `CONTEXTO DEL SISTEMA: ${systemMsg}\n\nMENSAJE DEL USUARIO: ${prompt}` }] 
                             }]
                         })
                     });
@@ -150,9 +148,13 @@
                     }
 
                     const data = await response.json();
-                    return data.candidates?.[0]?.content?.parts?.[0]?.text || "No se recibió respuesta.";
+                    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                    
+                    if (!text) throw new Error("Respuesta vacía del servidor.");
+                    return text;
+
                 } catch (err) {
-                    if (i === retries - 1) return `Error técnico: ${err.message}. Contacta al soporte al 6381124294.`;
+                    if (i === retries - 1) return `Error técnico: ${err.message}. Por favor contacte directamente al 6381124294.`;
                     await new Promise(r => setTimeout(r, 1000 * (i + 1)));
                 }
             }
@@ -164,7 +166,7 @@
             if (!input.value) return;
             
             res.classList.remove('hidden');
-            res.innerText = "Analizando su perfil...";
+            res.innerText = "Analizando perfil...";
             
             const system = "Eres un consultor experto en visas de VIAJA USA. Analiza el perfil seriamente. Indica puntos fuertes y débiles. Prohibido dar guías paso a paso o enlaces externos. Finaliza pidiendo contactar al 6381124294.";
             res.innerText = await callGemini(input.value, system);
@@ -209,7 +211,7 @@
             box.scrollTop = box.scrollHeight;
         }
 
-            document.getElementById('user-input').addEventListener('keypress', (e) => {
+        document.getElementById('user-input').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') sendMessage();
         });
     </script>
