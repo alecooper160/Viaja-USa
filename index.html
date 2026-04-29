@@ -4,152 +4,361 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VIAJA USA - Asesoría Migratoria</title>
-    
-    <!-- Estilos Críticos en Línea (Evitan Pantalla Blanca) -->
-    <style>
-        :root { --primary: #dc2626; --bg: #0f172a; }
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--bg);
-            color: white;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        }
-        .main-wrapper {
-            background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
-                              url('https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?q=80&w=2000');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            min-height: 100vh;
-        }
-        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
-        header { background: white; color: black; padding: 15px; position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
-        .card { background: white; color: #1f2937; padding: 20px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
-        .btn { cursor: pointer; border: none; padding: 12px; border-radius: 8px; font-weight: bold; width: 100%; transition: 0.3s; }
-        .btn-red { background: var(--primary); color: white; }
-        .btn-blue { background: #2563eb; color: white; }
-        .chat-area { height: 300px; overflow-y: auto; background: #f9fafb; border-radius: 10px; padding: 15px; border: 1px solid #e5e7eb; margin-bottom: 10px; }
-        input[type="text"], textarea { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; margin-bottom: 10px; box-sizing: border-box; }
-    </style>
-
-    <!-- Tailwind y FontAwesome (Carga Asíncrona) -->
+    <!-- Scripts externos -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: #1a1a1a; /* Color de respaldo para evitar pantalla blanca */
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .bg-main {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                              url('https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?q=80&w=2000&auto=format&fit=crop');
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+        }
+        .elaborate-title {
+            font-family: 'Playfair Display', serif;
+            background: linear-gradient(to bottom, #ffffff 30%, #d1d5db 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.8));
+            letter-spacing: -1px;
+            line-height: 1.1;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        .chat-container {
+            height: 400px;
+            overflow-y: auto;
+        }
+        .stamp-effect {
+            filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.1));
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #dc2626;
+            border-radius: 10px;
+        }
+    </style>
 </head>
-<body>
-
-    <div class="main-wrapper">
-        <header>
-            <div style="font-weight: 800; font-size: 1.2rem; color: #dc2626;">VIAJA USA</div>
-            <a href="https://wa.me/526381124294" style="background:#22c55e; color:white; padding: 8px 15px; border-radius: 20px; text-decoration:none; font-weight:bold; font-size: 0.8rem;">
-                <i class="fab fa-whatsapp"></i> WhatsApp
-            </a>
+<body class="text-gray-800">
+    <div class="bg-main">
+        <!-- Header -->
+        <header class="bg-white/95 backdrop-blur-md shadow-lg sticky top-0 z-50">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <div class="flex items-center">
+                    <img src="VIAJA-USA-14-10-2024.png" alt="VIAJA USA Logo" class="h-16 stamp-effect" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                    <span class="hidden font-bold text-xl text-red-600">VIAJA USA</span>
+                </div>
+                <nav class="hidden md:flex space-x-6 font-semibold">
+                    <a href="#tramites" class="hover:text-red-600 transition">Trámites</a>
+                    <a href="#herramientas-ia" class="hover:text-blue-600 transition">✨ Herramientas IA</a>
+                    <a href="#chat" class="hover:text-red-600 transition">Asistente</a>
+                </nav>
+                <a href="https://wa.me/526381124294" target="_blank" class="bg-green-500 text-white px-6 py-2.5 rounded-full flex items-center gap-2 hover:bg-green-600 transition shadow-xl transform hover:scale-105">
+                    <i class="fab fa-whatsapp text-lg"></i> <span class="hidden sm:inline font-bold">Contactar Asesor</span>
+                </a>
+            </div>
         </header>
 
-        <div class="container">
-            <section style="text-align: center; padding: 40px 0;">
-                <h1 style="font-size: 2.5rem; margin-bottom: 10px;">Expertos Migratorios</h1>
-                <p style="opacity: 0.8;">Tu trámite de visa y pasaporte en manos seguras.</p>
-            </section>
-
-            <div class="grid md:grid-cols-2 gap-6">
-                <!-- Analizador -->
-                <div class="card">
-                    <h3 class="font-bold text-lg mb-2 text-blue-800">Analizador de Perfil ✨</h3>
-                    <textarea id="profile-input" placeholder="Cuéntanos tu situación laboral y familiar..."></textarea>
-                    <button onclick="runAnalysis()" id="btn-ana" class="btn btn-blue">Analizar Mi Perfil</button>
-                    <div id="ana-res" class="mt-3 hidden p-3 bg-blue-50 text-sm border rounded"></div>
-                </div>
-
-                <!-- Carta -->
-                <div class="card">
-                    <h3 class="font-bold text-lg mb-2 text-red-700">Borrador de Carta ✨</h3>
-                    <input type="text" id="letter-input" placeholder="¿Cuál es tu motivo de viaje?">
-                    <button onclick="runLetter()" id="btn-let" class="btn btn-red">Generar Carta</button>
-                    <div id="let-res" class="mt-3 hidden p-3 bg-red-50 text-sm border rounded italic"></div>
+        <!-- Hero -->
+        <section class="relative py-24 px-4 text-center">
+            <div class="max-w-5xl mx-auto py-12">
+                <h1 class="elaborate-title text-5xl md:text-8xl font-black mb-6 italic">
+                    Expertos en Visas y Pasaportes
+                </h1>
+                <div class="inline-block bg-white/10 backdrop-blur-md px-6 py-2 rounded-full border border-white/20 mb-8">
+                    <p class="text-xl md:text-2xl font-semibold text-white tracking-wide">
+                        Tu puente directo a Estados Unidos y México
+                    </p>
                 </div>
             </div>
+        </section>
 
-            <!-- Chat -->
-            <div class="card mt-8">
-                <div class="font-bold text-sm uppercase mb-3 border-b pb-2">Asistente Virtual</div>
-                <div id="chat-output" class="chat-area text-sm">
-                    <div class="bg-gray-200 p-3 rounded-lg mb-2 max-w-[90%]">Hola Elizabeth, ¿qué duda tienes sobre tu trámite?</div>
+        <!-- IA Tools Section -->
+        <section id="herramientas-ia" class="container mx-auto py-16 px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-extrabold text-white mb-4">Herramientas Inteligentes ✨</h2>
+                <p class="text-white/80">Usa nuestra tecnología para preparar tu trámite antes de la cita con el asesor.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                <!-- Analizador de Perfil -->
+                <div class="glass-card p-8 rounded-3xl shadow-2xl relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i class="fas fa-search-dollar text-6xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-blue-800 flex items-center gap-2">
+                        Analizador de Perfil ✨
+                    </h3>
+                    <p class="text-sm text-gray-600 mb-6">Describe brevemente tu situación actual y recibe recomendaciones sobre tus puntos fuertes.</p>
+                    <textarea id="profile-text" class="w-full h-32 p-4 border-2 border-gray-100 rounded-2xl mb-4 focus:border-blue-500 outline-none resize-none" placeholder="Ej: Trabajo hace 5 años, quiero viajar con mi familia..."></textarea>
+                    <button onclick="analyzeProfile()" id="btn-analyze" class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 transition flex items-center justify-center gap-2">
+                        <i class="fas fa-magic"></i> Analizar Mi Perfil ✨
+                    </button>
+                    <div id="analysis-result" class="mt-4 hidden p-4 bg-blue-50 rounded-xl text-sm border border-blue-100"></div>
                 </div>
-                <div class="flex gap-2">
-                    <input type="text" id="chat-input" placeholder="Pregunta sobre requisitos..." style="margin-bottom:0">
-                    <button onclick="runChat()" class="btn btn-red" style="width: 50px;"><i class="fas fa-paper-plane"></i></button>
+
+                <!-- Generador de Carta -->
+                <div class="glass-card p-8 rounded-3xl shadow-2xl relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i class="fas fa-file-contract text-6xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-red-700 flex items-center gap-2">
+                        Borrador de Carta ✨
+                    </h3>
+                    <p class="text-sm text-gray-600 mb-6">Generamos un borrador profesional de carta de intención basado en tu motivo de viaje.</p>
+                    <input type="text" id="letter-purpose" class="w-full p-4 border-2 border-gray-100 rounded-xl mb-4 focus:border-red-500 outline-none" placeholder="¿Cuál es el motivo de tu viaje?">
+                    <button onclick="generateLetter()" id="btn-letter" class="w-full bg-red-600 text-white font-bold py-3 rounded-xl hover:bg-red-700 transition flex items-center justify-center gap-2">
+                        <i class="fas fa-pen-nib"></i> Crear Borrador ✨
+                    </button>
+                    <div id="letter-result" class="mt-4 hidden p-4 bg-red-50 rounded-xl text-sm border border-red-100 whitespace-pre-wrap font-serif italic"></div>
                 </div>
             </div>
+        </section>
 
-            <footer style="text-align: center; padding: 40px 0; font-size: 0.7rem; opacity: 0.6;">
-                VIAJA USA | Puerto Peñasco, Sonora | 638 112 4294
-            </footer>
-        </div>
+        <!-- Trámites -->
+        <section id="tramites" class="container mx-auto py-16 px-4 text-center">
+            <h2 class="text-3xl font-extrabold mb-12 text-white bg-red-600 px-8 py-3 rounded-lg shadow-lg inline-block">Trámites Populares</h2>
+            <div class="grid md:grid-cols-3 gap-8 mt-8 text-left">
+                <div class="glass-card p-8 rounded-3xl shadow-2xl border-t-8 border-red-600 transition hover:-translate-y-2">
+                    <h3 class="text-2xl font-bold mb-4 flex items-center gap-3 text-red-700"><i class="fas fa-passport"></i> Pasaporte</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <p class="font-bold text-xs uppercase text-gray-400 mb-2">Mayores de Edad:</p>
+                            <ul class="text-sm space-y-1 text-gray-700">
+                                <li>• Acta de Nacimiento.</li>
+                                <li>• Identificación (INE).</li>
+                                <li>• CURP certificada.</li>
+                            </ul>
+                        </div>
+                        <div class="pt-2 border-t border-gray-200">
+                            <p class="font-bold text-xs uppercase text-red-500 mb-2">Menores de Edad:</p>
+                            <ul class="text-sm space-y-1 text-gray-700">
+                                <li>• Acta de Nacimiento.</li>
+                                <li>• Identificación Escolar.</li>
+                                <li>• IDs de ambos padres.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-card p-8 rounded-3xl shadow-2xl border-t-8 border-red-600 transition hover:-translate-y-2">
+                    <h3 class="text-2xl font-bold mb-4 flex items-center gap-3 text-red-700"><i class="fas fa-plane-departure"></i> Visa Turista</h3>
+                    <ul class="text-sm space-y-3 text-gray-700 font-medium">
+                        <li>• Pasaporte vigente.</li>
+                        <li>• DS-160 Completo.</li>
+                        <li>• Citas en CAS y Consulado.</li>
+                        <li>• Solvencia económica.</li>
+                    </ul>
+                </div>
+                <div class="glass-card p-8 rounded-3xl shadow-2xl border-t-8 border-blue-700 transition hover:-translate-y-2">
+                    <h3 class="text-2xl font-bold mb-4 text-blue-900 uppercase">Green Card</h3>
+                    <ul class="text-sm space-y-3 text-gray-700 font-medium">
+                        <li>• Registro de entrada (I-94).</li>
+                        <li>• Petición familiar/laboral.</li>
+                        <li>• Examen médico.</li>
+                        <li>• Sin antecedentes penales.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI Chat Section -->
+        <section id="chat" class="container mx-auto py-16 px-4">
+            <div class="max-w-3xl mx-auto bg-white/98 rounded-[2.5rem] shadow-2xl overflow-hidden border border-gray-200">
+                <div class="bg-gray-900 p-6 text-white flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse shadow-[0_0_10px_#4ade80]"></div>
+                        <span class="font-bold tracking-tight uppercase text-xs">Asistente Inteligente ✨</span>
+                    </div>
+                    <i class="fas fa-robot text-2xl opacity-50"></i>
+                </div>
+                
+                <div id="chat-box" class="chat-container p-8 space-y-4 bg-gray-50/70 text-sm">
+                    <div class="flex justify-start">
+                        <div class="bg-white p-4 rounded-2xl rounded-tl-none shadow-sm max-w-[85%] border border-gray-100">
+                            <p class="font-semibold text-red-600 mb-1">¡Bienvenido!</p>
+                            ¿Tienes dudas sobre los requisitos? Pregúntame sobre cualquier trámite migratorio.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6 bg-white border-t border-gray-100 flex gap-3">
+                    <input type="text" id="user-input" placeholder="Ej: ¿Qué necesito para renovar visa?" class="flex-1 border-2 border-gray-100 rounded-full px-6 py-4 focus:outline-none focus:border-red-500 bg-gray-50 font-medium transition-all">
+                    <button onclick="sendMessage()" class="bg-red-600 text-white w-14 h-14 rounded-full flex items-center justify-center hover:bg-red-700 transition shadow-lg">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-gray-900 text-white py-16 px-4 text-center">
+            <img src="VIAJA-USA-14-10-2024.png" alt="Logo" class="h-16 mx-auto mb-8 brightness-0 invert opacity-40" onerror="this.style.display='none'">
+            <p class="text-sm opacity-50">&copy; 2024 VIAJA USA. Todos los derechos reservados.</p>
+            <p class="text-xs font-mono opacity-30 mt-4 uppercase">Puerto Peñasco, Sonora | 638 112 4294</p>
+        </footer>
     </div>
 
-    <script>
-        const key = ""; 
+    <!-- Floating WhatsApp -->
+    <a href="https://wa.me/526381124294" target="_blank" class="fixed bottom-8 right-8 bg-green-500 text-white w-20 h-20 rounded-full flex items-center justify-center text-4xl shadow-2xl hover:scale-110 transition-transform z-50 animate-bounce">
+        <i class="fab fa-whatsapp"></i>
+    </a>
 
-        async function askIA(p, s) {
-            try {
-                const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${key}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: p }] }],
-                        systemInstruction: { parts: [{ text: s }] }
-                    })
+    <script>
+        // Variables globales seguras
+        const apiKey = ""; 
+        let chatBox = null;
+        let userInput = null;
+
+        // Función de inicialización
+        function initApp() {
+            chatBox = document.getElementById('chat-box');
+            userInput = document.getElementById('user-input');
+
+            if (userInput) {
+                userInput.addEventListener('keypress', (e) => { 
+                    if (e.key === 'Enter') sendMessage(); 
                 });
-                const d = await r.json();
-                return d.candidates[0].content.parts[0].text;
-            } catch (e) {
-                return "Error de conexión. Llama al 6381124294.";
+            }
+            console.log("Aplicación inicializada correctamente");
+        }
+
+        // Ejecutar al cargar la ventana
+        window.onload = initApp;
+
+        async function callGemini(prompt, systemMsg, retries = 5) {
+            for (let i = 0; i < retries; i++) {
+                try {
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: prompt }] }],
+                            systemInstruction: { parts: [{ text: systemMsg }] }
+                        })
+                    });
+                    if (!response.ok) throw new Error('API Error');
+                    const data = await response.json();
+                    return data.candidates?.[0]?.content?.parts?.[0]?.text;
+                } catch (err) {
+                    if (i === retries - 1) throw err;
+                    await new Promise(res => setTimeout(res, Math.pow(2, i) * 1000));
+                }
             }
         }
 
-        async function runAnalysis() {
-            const i = document.getElementById('profile-input').value;
-            const r = document.getElementById('ana-res');
-            if(!i) return;
-            r.classList.remove('hidden');
-            r.innerText = "Evaluando...";
-            r.innerText = await askIA(i, "Analiza perfil migratorio seriamente. Puntos fuertes y débiles. No guías. Contacto 6381124294.");
+        async function analyzeProfile() {
+            const textInput = document.getElementById('profile-text');
+            const resDiv = document.getElementById('analysis-result');
+            const btn = document.getElementById('btn-analyze');
+            if (!textInput || !textInput.value || !btn) return;
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner animate-spin"></i> Analizando...';
+            resDiv.classList.remove('hidden');
+            resDiv.innerText = "Nuestra IA está evaluando tu información...";
+
+            const system = "Eres un consultor experto en visas de VIAJA USA. Analiza el perfil y menciona puntos fuertes y débiles. REGLA ESTRICTA: NO des guías de cómo hacer el proceso ni enlaces externos. Finaliza diciendo que contacten al 6381124294 para asesoría profesional.";
+            
+            try {
+                const result = await callGemini(textInput.value, system);
+                resDiv.innerText = result;
+            } catch (e) {
+                resDiv.innerText = "Error al analizar. Inténtalo más tarde.";
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-magic"></i> Analizar Mi Perfil ✨';
+            }
         }
 
-        async function runLetter() {
-            const i = document.getElementById('letter-input').value;
-            const r = document.getElementById('let-res');
-            if(!i) return;
-            r.classList.remove('hidden');
-            r.innerText = "Redactando...";
-            r.innerText = await askIA(i, "Escribe una carta de intención formal para viaje.");
+        async function generateLetter() {
+            const purposeInput = document.getElementById('letter-purpose');
+            const resDiv = document.getElementById('letter-result');
+            const btn = document.getElementById('btn-letter');
+            if (!purposeInput || !purposeInput.value || !btn) return;
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner animate-spin"></i> Redactando...';
+            resDiv.classList.remove('hidden');
+            resDiv.innerText = "Escribiendo borrador...";
+
+            const system = "Genera un borrador formal breve para una carta de intención de viaje. NO des instrucciones de cómo enviarla ni enlaces. Solo el texto de la carta con espacios en blanco para datos personales.";
+            
+            try {
+                const result = await callGemini(`Motivo: ${purposeInput.value}`, system);
+                resDiv.innerText = result;
+            } catch (e) {
+                resDiv.innerText = "Error al generar la carta.";
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-pen-nib"></i> Crear Borrador ✨';
+            }
         }
 
-        async function runChat() {
-            const i = document.getElementById('chat-input');
-            const o = document.getElementById('chat-output');
-            const v = i.value.trim();
-            if(!v) return;
+        async function sendMessage() {
+            if (!userInput || !chatBox) return;
+            const message = userInput.value.trim();
+            if (!message) return;
 
-            const u = document.createElement('div');
-            u.className = "bg-red-100 p-2 rounded mb-2 text-right ml-auto max-w-[80%]";
-            u.innerText = v;
-            o.appendChild(u);
-            i.value = '';
+            appendMessage('user', message);
+            userInput.value = '';
 
-            const res = await askIA(v, "Asistente VIAJA USA. Solo requisitos. No links. Citas al 6381124294.");
-            const a = document.createElement('div');
-            a.className = "bg-white border p-2 rounded mb-2 max-w-[80%]";
-            a.innerHTML = res.replace(/\n/g, '<br>');
-            o.appendChild(a);
-            o.scrollTop = o.scrollHeight;
+            const loadingId = "loader-" + Date.now();
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'flex justify-start';
+            loadingDiv.id = loadingId;
+            loadingDiv.innerHTML = `<div class="bg-gray-200 p-3 rounded-lg animate-pulse text-xs text-gray-600">Consultando requisitos...</div>`;
+            chatBox.appendChild(loadingDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            const system = `Eres el asistente de VIAJA USA. 
+            REGLAS DE ORO:
+            1. SOLO proporciona listas de requisitos oficiales.
+            2. TIENES ESTRICTAMENTE PROHIBIDO DAR ENLACES A PÁGINAS EXTERNAS (como el formulario DS-160, CEAC, etc.).
+            3. TIENES ESTRICTAMENTE PROHIBIDO EXPLICAR EL PROCESO PASO A PASO o cómo realizar el trámite.
+            4. Tu única respuesta ante procesos complejos es: 'Para realizar este trámite correctamente y evitar errores, contacta a nuestros expertos al 6381124294 para una cita'.
+            5. Sé serio y profesional.`;
+            
+            try {
+                const result = await callGemini(message, system);
+                const loader = document.getElementById(loadingId);
+                if (loader) loader.remove();
+                appendMessage('ai', result);
+            } catch (e) {
+                const errorEl = document.getElementById(loadingId);
+                if(errorEl) errorEl.innerHTML = '<div class="text-red-500">Error de conexión. Llama al 6381124294.</div>';
+            }
         }
 
-        document.getElementById('chat-input').addEventListener('keypress', e => { if(e.key === 'Enter') runChat(); });
+        function appendMessage(sender, text) {
+            if (!chatBox) return;
+            const div = document.createElement('div');
+            div.className = sender === 'user' ? 'flex justify-end' : 'flex justify-start';
+            const inner = document.createElement('div');
+            inner.className = sender === 'user' ? 'bg-red-600 text-white p-4 rounded-2xl rounded-tr-none max-w-[85%]' : 'bg-white p-4 rounded-2xl rounded-tl-none shadow-md border border-gray-100 max-w-[85%]';
+            inner.innerHTML = text.replace(/\n/g, '<br>');
+            div.appendChild(inner);
+            chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
     </script>
 </body>
 </html>
