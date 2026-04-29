@@ -124,14 +124,10 @@
     </div>
 
     <script>
-        // Elizabeth: Aquí debes colocar tu API KEY dentro de las comillas.
-        const apiKey = "TU_API_KEY_AQUI"; 
+        // API Key configurada
+        const apiKey = "AIzaSyCXFK8ACvbUAyve5e-D6SHOcHex6xVbpc4"; 
 
         async function callGemini(prompt, systemMsg, retries = 3) {
-            if (!apiKey || apiKey === "TU_API_KEY_AQUI") {
-                return "Error: No has configurado la API Key de Gemini correctamente.";
-            }
-
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
             
             for (let i = 0; i < retries; i++) {
@@ -153,7 +149,7 @@
                     const data = await response.json();
                     return data.candidates?.[0]?.content?.parts?.[0]?.text || "No se recibió respuesta.";
                 } catch (err) {
-                    if (i === retries - 1) return `Error técnico: ${err.message}. Contacta al soporte.`;
+                    if (i === retries - 1) return `Error técnico: ${err.message}. Contacta al soporte al 6381124294.`;
                     await new Promise(r => setTimeout(r, 1000 * (i + 1)));
                 }
             }
