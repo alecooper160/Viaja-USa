@@ -77,7 +77,6 @@
         <!-- IA Tools -->
         <section id="herramientas-ia" class="container mx-auto py-16 px-4">
             <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-                <!-- Analizador -->
                 <div class="glass-card p-8 rounded-3xl shadow-2xl">
                     <h3 class="text-2xl font-bold mb-4 text-blue-800">Analizador de Perfil ✨</h3>
                     <textarea id="profile-text" class="w-full h-32 p-4 border rounded-2xl mb-4 outline-none resize-none" placeholder="Describe tu situación laboral y familiar..."></textarea>
@@ -85,7 +84,6 @@
                     <div id="analysis-result" class="mt-4 hidden p-4 bg-blue-50 rounded-xl text-sm border border-blue-100"></div>
                 </div>
 
-                <!-- Generador -->
                 <div class="glass-card p-8 rounded-3xl shadow-2xl">
                     <h3 class="text-2xl font-bold mb-4 text-red-700">Borrador de Carta ✨</h3>
                     <input type="text" id="letter-purpose" class="w-full p-4 border rounded-xl mb-4 outline-none" placeholder="Motivo de tu viaje...">
@@ -124,44 +122,52 @@
     </div>
 
     <script>
-        const apiKey = "AIzaSyCXFK8ACvbUAyve5e-D6SHOcHex6xVbpc4"; 
+        const apiKey = ""; // API Key se proporciona en el entorno de ejecución
 
-        async function callGemini(prompt, systemMsg, retries = 3) {
-            // Se actualizó la URL para usar el endpoint global compatible
-            const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        async function callGemini(prompt, systemMsg, retries = 5) {
+            // Se actualizó el modelo a gemini-2.5-flash-preview-09-2025 para compatibilidad garantizada
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
             
             for (let i = 0; i < retries; i++) {
                 try {
                     const response = await fetch(url, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: { 
+                            'Content-Type': 'application/json'
+                        },
                         body: JSON.stringify({
                             contents: [{ 
-                                parts: [{ text: `INSTRUCCIONES DE SISTEMA (MANTENER TONO SERIO Y PROFESIONAL): ${systemMsg}\n\nPREGUNTA DEL CLIENTE: ${prompt}` }] 
+                                parts: [{ text: prompt }] 
                             }],
+                            systemInstruction: {
+                                parts: [{ text: systemMsg }]
+                            },
                             generationConfig: {
-                                temperature: 0.2,
-                                topP: 0.8,
-                                topK: 40
+                                temperature: 0.1,
+                                maxOutputTokens: 800
                             }
                         })
                     });
 
+                    const data = await response.json();
+
                     if (!response.ok) {
-                        const errData = await response.json();
-                        // Si falla la v1, intentamos con v1beta automáticamente en el siguiente reintento
-                        throw new Error(errData.error?.message || "Error en la API");
+                        if (response.status === 404 || response.status === 400) {
+                             console.error("Error en configuración de API:", data.error?.message);
+                             throw new Error("Configuración no válida");
+                        }
+                        throw new Error(data.error?.message || "Error desconocido");
                     }
 
-                    const data = await response.json();
-                    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                    const resultText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (!resultText) throw new Error("Respuesta incompleta");
                     
-                    if (!text) throw new Error("Respuesta vacía del servidor.");
-                    return text;
+                    return resultText;
 
                 } catch (err) {
-                    if (i === retries - 1) return `Error de conexión. Por favor contacte directamente al 6381124294 para asistencia inmediata.`;
-                    await new Promise(r => setTimeout(r, 1000 * (i + 1)));
+                    console.error(`Intento ${i + 1} fallido:`, err.message);
+                    if (i === retries - 1) return `Lo sentimos, el servicio tiene un problema de configuración. Por favor llame al 638 112 4294.`;
+                    await new Promise(r => setTimeout(r, 1000 * Math.pow(2, i)));
                 }
             }
         }
@@ -172,10 +178,11 @@
             if (!input.value) return;
             
             res.classList.remove('hidden');
-            res.innerText = "Analizando perfil migratorio...";
+            res.innerText = "Procesando información...";
             
-            const system = "Eres un consultor experto de VIAJA USA. Analiza el perfil con seriedad. Indica viabilidad, puntos fuertes y áreas de mejora. No des guías paso a paso ni enlaces. Finaliza indicando que para un análisis oficial deben llamar al 6381124294.";
-            res.innerText = await callGemini(input.value, system);
+            const system = "Consultor migratorio experto de VIAJA USA. Analiza el perfil con seriedad técnica en español. Indica viabilidad basada en lazos familiares y económicos. Prohibido dar procesos paso a paso. Cierre: llamar al 6381124294.";
+            const response = await callGemini(input.value, system);
+            res.innerText = response;
         }
 
         async function generateLetter() {
@@ -184,10 +191,11 @@
             if (!input.value) return;
 
             res.classList.remove('hidden');
-            res.innerText = "Generando borrador formal...";
+            res.innerText = "Redactando carta formal...";
             
-            const system = "Genera un borrador formal de carta de intención de viaje para embajada. Lenguaje técnico y serio.";
-            res.innerText = await callGemini(input.value, system);
+            const system = "Genera un borrador de carta de intención de viaje para una solicitud de visa en español. Tono altamente formal y profesional.";
+            const response = await callGemini(input.value, system);
+            res.innerText = response;
         }
 
         async function sendMessage() {
@@ -200,7 +208,7 @@
             
             appendMsg('user', userMsg);
 
-            const system = "Asistente oficial de VIAJA USA. Responde consultas sobre visas y pasaportes con tono serio y profesional. Solo proporciona requisitos y datos informativos. No uses nombres personales. No des enlaces. Citas únicamente al 6381124294.";
+            const system = "Asistente Virtual de VIAJA USA en español. Proporciona requisitos generales de trámites migratorios. Tono serio y profesional. No menciones nombres. No des links. Citas al 6381124294.";
             const response = await callGemini(userMsg, system);
             appendMsg('ai', response);
         }
