@@ -43,7 +43,7 @@
                     <span class="hidden font-bold text-xl text-red-600">VIAJA USA</span>
                 </div>
                 <nav class="hidden md:flex space-x-6 font-semibold">
-                    <a href="#ubicacion" class="hover:text-red-600 transition">📍 Ubicación y Horario</a>
+                    <a href="#ubicacion" class="hover:text-red-600 transition">📍 Ubicación</a>
                     <a href="#herramientas-ia" class="hover:text-purple-600 transition">✨ IA Tools</a>
                     <a href="#chat" class="hover:text-blue-600 transition">Asistente</a>
                 </nav>
@@ -53,7 +53,6 @@
             </div>
         </header>
 
-        <!-- Hero Section -->
         <section class="relative py-20 px-4 text-center">
             <div class="max-w-5xl mx-auto py-12">
                 <h1 class="elaborate-title text-5xl md:text-8xl font-black mb-6 italic text-white">Expertos en Visas</h1>
@@ -63,7 +62,6 @@
             </div>
         </section>
 
-        <!-- Sección de Contacto y Horario -->
         <section id="ubicacion" class="container mx-auto py-12 px-4">
             <div class="max-w-3xl mx-auto">
                 <div class="glass-card p-8 md:p-12 rounded-[2.5rem] shadow-2xl border-l-8 border-red-600">
@@ -73,190 +71,69 @@
                         </div>
                         <h2 class="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight">Atención al Cliente</h2>
                     </div>
-                    
                     <div class="grid md:grid-cols-2 gap-10">
                         <div class="space-y-2">
-                            <h4 class="font-bold text-sm uppercase tracking-widest text-gray-400 mb-2">Horario de Oficina</h4>
+                            <h4 class="font-bold text-sm uppercase tracking-widest text-gray-400 mb-2">Horario</h4>
                             <p class="text-xl font-semibold text-gray-700">Lunes a Viernes</p>
                             <p class="text-3xl font-black text-red-600">9:00 am — 3:00 pm</p>
                         </div>
-                        
                         <div class="space-y-2">
-                            <h4 class="font-bold text-sm uppercase tracking-widest text-gray-400 mb-2">Dirección Física</h4>
+                            <h4 class="font-bold text-sm uppercase tracking-widest text-gray-400 mb-2">Dirección</h4>
                             <p class="text-xl text-gray-700 leading-relaxed">
-                                <i class="fas fa-map-marker-alt text-red-600 mr-2"></i>
                                 <strong>Guillermo Prieto y Comonfort</strong><br>
                                 <span class="text-lg opacity-80">Puerto Peñasco, Sonora.</span>
                             </p>
                         </div>
                     </div>
-
-                    <div class="mt-10 p-6 bg-gray-50 rounded-3xl border border-gray-100 flex items-center justify-between">
-                        <div>
-                            <p class="text-sm font-bold text-gray-500">¿Necesitas una cita?</p>
-                            <p class="text-lg font-bold text-gray-800">Contáctanos por WhatsApp</p>
-                        </div>
-                        <a href="https://wa.me/526381124294" class="bg-green-500 text-white p-4 rounded-2xl shadow-lg hover:bg-green-600 transition">
-                            <i class="fab fa-whatsapp text-2xl"></i>
-                        </a>
-                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Main IA Tools -->
         <section id="herramientas-ia" class="container mx-auto py-16 px-4">
-            <h2 class="text-center text-3xl font-bold text-white mb-12 flex items-center justify-center gap-3">
-                <span class="h-px w-12 bg-white/30"></span>
-                Herramientas Inteligentes
-                <span class="h-px w-12 bg-white/30"></span>
-            </h2>
             <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                <!-- Analizador de Perfil -->
-                <div class="glass-card p-8 rounded-3xl shadow-2xl flex flex-col border border-white/50">
-                    <h3 class="text-2xl font-bold mb-4 text-blue-800 flex items-center gap-2">
-                        <i class="fas fa-user-check"></i> Analizador de Perfil
-                    </h3>
-                    <p class="text-xs text-gray-500 mb-4 italic">Evalúa tus probabilidades de éxito basándote en tus lazos.</p>
-                    <textarea id="profile-text" class="w-full h-32 p-4 border rounded-2xl mb-4 outline-none resize-none focus:border-blue-500" placeholder="Ej: Trabajo en una empresa hace 5 años, tengo casa propia y familia en México..."></textarea>
-                    <button onclick="analyzeProfile()" id="btn-analyze" class="mt-auto w-full bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 transition flex items-center justify-center gap-2 shadow-lg">
-                        <span>Analizar Perfil</span>
-                    </button>
+                <div class="glass-card p-8 rounded-3xl shadow-2xl flex flex-col">
+                    <h3 class="text-2xl font-bold mb-4 text-blue-800"><i class="fas fa-user-check"></i> Analizador</h3>
+                    <textarea id="profile-text" class="w-full h-32 p-4 border rounded-2xl mb-4 outline-none focus:border-blue-500" placeholder="Describe tu situación..."></textarea>
+                    <button onclick="analyzeProfile()" id="btn-analyze" class="mt-auto w-full bg-blue-600 text-white font-bold py-3 rounded-xl shadow-lg">Analizar Perfil</button>
                     <div id="analysis-result" class="mt-4 hidden p-4 bg-blue-50 rounded-xl text-sm border border-blue-100"></div>
                 </div>
-
-                <!-- Borrador de Carta -->
-                <div class="glass-card p-8 rounded-3xl shadow-2xl flex flex-col border border-white/50">
-                    <h3 class="text-2xl font-bold mb-4 text-red-700 flex items-center gap-2">
-                        <i class="fas fa-file-alt"></i> Borrador de Carta
-                    </h3>
-                    <p class="text-xs text-gray-500 mb-4 italic">Genera una carta de motivos profesional para el cónsul.</p>
-                    <input type="text" id="letter-purpose" class="w-full p-4 border rounded-xl mb-4 outline-none focus:border-red-500" placeholder="Motivo: Turismo y visita a Disney...">
-                    <button onclick="generateLetter()" id="btn-letter" class="mt-auto w-full bg-red-600 text-white font-bold py-3 rounded-xl hover:bg-red-700 transition shadow-lg">Crear Borrador</button>
+                <div class="glass-card p-8 rounded-3xl shadow-2xl flex flex-col">
+                    <h3 class="text-2xl font-bold mb-4 text-red-700"><i class="fas fa-file-alt"></i> Borrador</h3>
+                    <input type="text" id="letter-purpose" class="w-full p-4 border rounded-xl mb-4 outline-none focus:border-red-500" placeholder="Motivo del viaje...">
+                    <button onclick="generateLetter()" id="btn-letter" class="mt-auto w-full bg-red-600 text-white font-bold py-3 rounded-xl shadow-lg">Crear Borrador</button>
                     <div id="letter-result" class="mt-4 hidden p-4 bg-red-50 rounded-xl text-sm border border-red-100 italic whitespace-pre-wrap"></div>
                 </div>
             </div>
         </section>
 
-        <!-- Chat Assistant -->
         <section id="chat" class="container mx-auto py-16 px-4 pb-32">
-            <div class="max-w-2xl mx-auto bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-gray-200">
-                <div class="bg-gray-900 p-6 text-white flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                        <span class="font-bold text-xs uppercase tracking-widest">Asistente Virtual VIAJA USA ✨</span>
-                    </div>
-                </div>
+            <div class="max-w-2xl mx-auto bg-white rounded-[2rem] shadow-2xl overflow-hidden">
+                <div class="bg-gray-900 p-6 text-white"><span class="font-bold text-xs uppercase">Asistente VIAJA USA ✨</span></div>
                 <div id="chat-box" class="chat-container p-6 space-y-4 bg-gray-50/50">
-                    <div class="bg-white p-4 rounded-2xl rounded-tl-none shadow-sm border border-gray-100 max-w-[85%] text-sm">
-                        Hola, soy el asistente inteligente de VIAJA USA. ¿Deseas saber más sobre nuestra ubicación o cómo agendar una cita?
-                    </div>
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border text-sm">Hola, ¿en qué puedo ayudarte hoy con tu trámite?</div>
                 </div>
                 <div class="p-4 border-t flex gap-2">
-                    <input type="text" id="user-input" placeholder="Pregunta algo sobre tu trámite..." class="flex-1 border-2 border-gray-100 rounded-full px-6 py-3 focus:outline-none focus:border-red-500 text-sm">
-                    <button onclick="sendMessage()" class="bg-red-600 text-white w-12 h-12 rounded-full flex items-center justify-center transition-transform active:scale-95 shadow-lg">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
+                    <input type="text" id="user-input" placeholder="Escribe aquí..." class="flex-1 border rounded-full px-6 py-3 focus:outline-none focus:border-red-500 text-sm">
+                    <button onclick="sendMessage()" class="bg-red-600 text-white w-12 h-12 rounded-full shadow-lg"><i class="fas fa-paper-plane"></i></button>
                 </div>
             </div>
         </section>
-
-        <footer class="bg-gray-900 text-white py-12 text-center">
-            <div class="mb-4">
-                <p class="font-bold text-lg">VIAJA USA</p>
-                <p class="text-sm opacity-70">Guillermo Prieto y Comonfort, Puerto Peñasco, Sonora.</p>
-                <p class="text-sm opacity-70">Lunes a Viernes: 9:00 am - 3:00 pm</p>
-            </div>
-            <p class="text-xs opacity-50 mb-4">&copy; 2024 VIAJA USA | Expertos en Trámites Consulares</p>
-            <div class="flex justify-center gap-6 text-xl opacity-70">
-                <i class="fab fa-facebook hover:text-blue-400 cursor-pointer"></i>
-                <i class="fab fa-instagram hover:text-pink-400 cursor-pointer"></i>
-                <i class="fab fa-whatsapp hover:text-green-400 cursor-pointer"></i>
-            </div>
-        </footer>
     </div>
 
     <script>
-        const _config = {
-            model: "gemini-2.5-flash-preview-09-2025",
-            apiKey: "" // Provided at runtime
-        };
-<script>
-    async function callGemini(prompt, systemMsg) {
-        try {
-            const response = await fetch('/.netlify/functions/gemini-proxy', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ prompt, systemMsg })
-            });
-
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.error || "Error");
-            return data.text;
-        } catch (err) {
-            console.error(err);
-            return "Error de conexión con el servidor de IA.";
-        }
-    }
-    async function analyzeProfile() {
-        const input = document.getElementById('profile-text');
-        const res = document.getElementById('analysis-result');
-        const btn = document.getElementById('btn-analyze');
-        if (!input.value.trim()) return;
-        res.classList.remove('hidden');
-        res.innerHTML = '<div class="loading-shimmer h-20 rounded-xl"></div>';
-        btn.disabled = true;
-        const response = await callGemini(`Perfil: ${input.value}`, "Eres un Consultor Senior de Visas en VIAJA USA. Analiza los lazos económicos y sociales. Da un veredicto constructivo y serio.");
-        res.innerText = response;
-        btn.disabled = false;
-    }
-
-    async function generateLetter() {
-        const input = document.getElementById('letter-purpose');
-        const res = document.getElementById('letter-result');
-        const btn = document.getElementById('btn-letter');
-        if (!input.value.trim()) return;
-        res.classList.remove('hidden');
-        res.innerHTML = '<div class="loading-shimmer h-32 rounded-xl"></div>';
-        btn.disabled = true;
-        const response = await callGemini(`Propósito: ${input.value}`, "Genera un borrador formal de carta de motivos para visa americana.");
-        res.innerText = response;
-        btn.disabled = false;
-    }
-
-    async function sendMessage() {
-        const input = document.getElementById('user-input');
-        const userMsg = input.value;
-        if (!userMsg.trim()) return;
-        input.value = '';
-        appendMsg('user', userMsg);
-        const response = await callGemini(userMsg, "Eres el asistente oficial de VIAJA USA. Ubicación: Guillermo Prieto y Comonfort. Horario: L-V 9am-3pm. Responde serio y profesional.");
-        appendMsg('ai', response);
-    }
-
-    function appendMsg(sender, text) {
-        const box = document.getElementById('chat-box');
-        const div = document.createElement('div');
-        div.className = sender === 'user' ? 'flex justify-end' : 'flex justify-start';
-        const inner = document.createElement('div');
-        inner.className = sender === 'user' ? 'bg-red-600 text-white p-3 rounded-2xl rounded-tr-none text-sm max-w-[85%]' : 'bg-white p-3 rounded-2xl rounded-tl-none border text-sm max-w-[85%]';
-        inner.innerText = text;
-        div.appendChild(inner);
-        box.appendChild(div);
-        box.scrollTop = box.scrollHeight;
-    }
-
-    document.getElementById('user-input').addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
-</script>
-
-                    const data = await response.json();
-                    if (!response.ok) throw new Error(data.error?.message || "Error");
-                    
-                    return data.candidates?.[0]?.content?.parts?.[0]?.text || "Lo siento, hubo un problema con la respuesta.";
-                } catch (err) {
-                    if (i === retries - 1) return "Error de conexión temporal.";
-                    await new Promise(r => setTimeout(r, Math.pow(2, i) * 1000));
-                }
+        async function callGemini(prompt, systemMsg) {
+            try {
+                // Llamamos a la funcion de Netlify, no a Google directamente
+                const response = await fetch('/.netlify/functions/gemini-proxy', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt, systemMsg })
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error);
+                return data.text;
+            } catch (err) {
+                return "Lo siento, hay un problema técnico. Por favor intenta más tarde.";
             }
         }
 
@@ -265,15 +142,10 @@
             const res = document.getElementById('analysis-result');
             const btn = document.getElementById('btn-analyze');
             if (!input.value.trim()) return;
-            
             res.classList.remove('hidden');
             res.innerHTML = '<div class="loading-shimmer h-20 rounded-xl"></div>';
             btn.disabled = true;
-
-            const response = await callGemini(
-                `Perfil del usuario: ${input.value}`, 
-                "Eres un Consultor Senior de Visas en VIAJA USA. Analiza los lazos económicos, familiares y sociales del solicitante. Da un veredicto constructivo y serio en español."
-            );
+            const response = await callGemini(`Perfil: ${input.value}`, "Eres un Consultor de Visas en VIAJA USA. Analiza lazos economicos y sociales de forma seria.");
             res.innerText = response;
             btn.disabled = false;
         }
@@ -283,15 +155,10 @@
             const res = document.getElementById('letter-result');
             const btn = document.getElementById('btn-letter');
             if (!input.value.trim()) return;
-
             res.classList.remove('hidden');
             res.innerHTML = '<div class="loading-shimmer h-32 rounded-xl"></div>';
             btn.disabled = true;
-
-            const response = await callGemini(
-                `Propósito del viaje: ${input.value}`, 
-                "Eres un redactor experto en documentos consulares. Genera un borrador formal de carta de motivos para solicitud de visa americana en español."
-            );
+            const response = await callGemini(`Motivo: ${input.value}`, "Genera una carta formal de motivos para visa.");
             res.innerText = response;
             btn.disabled = false;
         }
@@ -301,13 +168,8 @@
             const userMsg = input.value;
             if (!userMsg.trim()) return;
             input.value = '';
-            
             appendMsg('user', userMsg);
-            
-            const response = await callGemini(
-                userMsg, 
-                "Eres el asistente oficial de VIAJA USA en Puerto Peñasco. Ubicación: Guillermo Prieto y Comonfort. Horario: Lunes a Viernes de 9am a 3pm. Responde dudas migratorias de forma seria y profesional en español. Nunca uses lenguaje informal."
-            );
+            const response = await callGemini(userMsg, "Eres el asistente de VIAJA USA en Puerto Peñasco. Responde dudas migratorias profesionalmente.");
             appendMsg('ai', response);
         }
 
@@ -316,18 +178,14 @@
             const div = document.createElement('div');
             div.className = sender === 'user' ? 'flex justify-end' : 'flex justify-start';
             const inner = document.createElement('div');
-            inner.className = sender === 'user' 
-                ? 'bg-red-600 text-white p-3 rounded-2xl rounded-tr-none shadow-md text-sm max-w-[85%]' 
-                : 'bg-white p-3 rounded-2xl rounded-tl-none border shadow-sm text-sm max-w-[85%]';
+            inner.className = sender === 'user' ? 'bg-red-600 text-white p-3 rounded-2xl text-sm max-w-[85%]' : 'bg-white p-3 rounded-2xl border text-sm max-w-[85%]';
             inner.innerText = text;
             div.appendChild(inner);
             box.appendChild(div);
             box.scrollTop = box.scrollHeight;
         }
 
-        document.getElementById('user-input').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendMessage();
-        });
+        document.getElementById('user-input').addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
     </script>
 </body>
 </html>
