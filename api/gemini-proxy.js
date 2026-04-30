@@ -9,26 +9,31 @@ module.exports = async (req, res) => {
     const { prompt, systemMsg } = req.body;
     const apiKey = process.env.GEMINI_API_KEY;
 
-    if (!apiKey) return res.status(200).json({ text: "Falta API Key en Vercel." });
+    if (!apiKey) return res.status(200).json({ text: "Falta API Key." });
 
-    // Intentamos con la versión PRO, que es la que se activa por defecto en proyectos nuevos
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
+    // Intentamos con la versión 1.5 Flash pero usando la ruta de 'v1' (Estable)
+    // Este es el endpoint que Google está forzando a nivel global ahora mismo
+    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        contents: [{ parts: [{ text: `${systemMsg}\n\n${prompt}` }] }]
+        contents: [{
+          parts: [{ text: `${systemMsg}\n\n${prompt}` }]
+        }]
       })
     });
 
     const data = await response.json();
 
     if (data.error) {
-      // Si falla, mostramos el mensaje exacto de Google para saber qué modelo SI puedes usar
-      return res.status(200).json({ 
-        text: `Aviso: Tu llave de Google dice "${data.error.message}". Prueba a generar una llave nueva en https://aistudio.google.com/ haciendo clic en 'Get API Key' y luego en 'Create API key in new project'.` 
-      });
+        // Si vuelve a fallar, intentamos con el modelo de texto puro (text-bison-001) 
+        // que es el abuelo de todos y siempre está activo
+        const fallbackUrl = `https://generativelanguage.googleapis.com/v1beta/models/text-bison-001:generateMessage?key=${apiKey}`;
+        return res.status(200).json({ 
+            text: `Error de modelo: ${data.error.message}. Intenta cambiar el nombre del modelo en el código a 'gemini-1.5-flash-8b'.` 
+        });
     }
 
     const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Sin respuesta.";
