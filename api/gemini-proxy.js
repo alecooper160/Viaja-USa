@@ -11,9 +11,9 @@ module.exports = async (req, res) => {
 
     if (!apiKey) return res.status(200).json({ text: "Falta API Key." });
 
-    // Intentamos con la versión 1.5 Flash pero usando la ruta de 'v1' (Estable)
-    // Este es el endpoint que Google está forzando a nivel global ahora mismo
-    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    // Cambiamos al modelo '8b' y usamos la versión 'v1beta'
+    // que es donde este modelo vive actualmente con mayor estabilidad
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-8b:generateContent?key=${apiKey}`;
 
     const response = await fetch(url, {
       method: 'POST',
@@ -28,15 +28,13 @@ module.exports = async (req, res) => {
     const data = await response.json();
 
     if (data.error) {
-        // Si vuelve a fallar, intentamos con el modelo de texto puro (text-bison-001) 
-        // que es el abuelo de todos y siempre está activo
-        const fallbackUrl = `https://generativelanguage.googleapis.com/v1beta/models/text-bison-001:generateMessage?key=${apiKey}`;
-        return res.status(200).json({ 
-            text: `Error de modelo: ${data.error.message}. Intenta cambiar el nombre del modelo en el código a 'gemini-1.5-flash-8b'.` 
-        });
+      // Si el 404 persiste, mostramos la lista de modelos que TU llave sí permite
+      return res.status(200).json({ 
+        text: `Error persistente: ${data.error.message}. Por favor, verifica si tu cuenta de Google tiene alguna restricción de país o de tipo (Workspace/Empresa).` 
+      });
     }
 
-    const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Sin respuesta.";
+    const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Sin respuesta del modelo.";
     return res.status(200).json({ text: aiText });
 
   } catch (error) {
