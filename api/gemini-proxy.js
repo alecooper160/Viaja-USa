@@ -10,18 +10,19 @@ module.exports = async (req, res) => {
     const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
-      return res.status(200).json({ text: "Error: No configuraste la GEMINI_API_KEY en Vercel." });
+      return res.status(200).json({ text: "Falta la API Key en Vercel." });
     }
 
-    // Usaremos v1beta y gemini-1.5-pro, que es el más flexible con las regiones
+    // Intentamos con la URL más básica y el modelo 1.0 Pro
+    // Este modelo es el que Google regala por defecto al crear cualquier cuenta
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.0-pro:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents: [{
-            parts: [{ text: `INSTRUCCIONES: ${systemMsg}\n\nPREGUNTA: ${prompt}` }]
+            parts: [{ text: `${systemMsg}\n\nPregunta: ${prompt}` }]
           }]
         })
       }
@@ -30,16 +31,16 @@ module.exports = async (req, res) => {
     const data = await response.json();
 
     if (data.error) {
-      // Si esto falla, el error nos dirá si es por localización o permisos
+      // Si esto falla, te daré un link directo para arreglarlo
       return res.status(200).json({ 
-        text: `Aviso del sistema: ${data.error.message} (Código: ${data.error.status})` 
+        text: `Error de Google: ${data.error.message}. Por favor, entra a https://aistudio.google.com/ y asegúrate de que puedes usar el chat ahí.` 
       });
     }
 
-    const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "El sistema no pudo generar una respuesta en este momento.";
+    const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "No recibí respuesta.";
     return res.status(200).json({ text: aiText });
 
   } catch (error) {
-    return res.status(200).json({ text: "Error de conexión: " + error.message });
+    return res.status(200).json({ text: "Error: " + error.message });
   }
 };
