@@ -13,34 +13,36 @@ module.exports = async (req, res) => {
       return res.status(200).json({ text: "Falta la API Key en Vercel." });
     }
 
-    // Intentamos con la URL más básica y el modelo 1.0 Pro
-    // Este modelo es el que Google regala por defecto al crear cualquier cuenta
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.0-pro:generateContent?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{
-            parts: [{ text: `${systemMsg}\n\nPregunta: ${prompt}` }]
-          }]
-        })
-      }
-    );
+    // Usamos el endpoint v1 (estable) con el nombre exacto 'gemini-1.5-flash'
+    // Pero esta vez sin el prefijo 'models/' en la construcción interna si fuera necesario
+    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{
+          parts: [{ text: `${systemMsg}\n\n${prompt}` }]
+        }]
+      })
+    });
 
     const data = await response.json();
 
     if (data.error) {
-      // Si esto falla, te daré un link directo para arreglarlo
-      return res.status(200).json({ 
-        text: `Error de Google: ${data.error.message}. Por favor, entra a https://aistudio.google.com/ y asegúrate de que puedes usar el chat ahí.` 
-      });
+      // Si vuelve a dar 404, imprimimos la lista de modelos permitidos para tu llave
+      if (data.error.status === "NOT_FOUND") {
+        return res.status(200).json({ 
+          text: "Error de configuración: Tu API Key no reconoce este modelo. Por favor, verifica que en AI Studio el modelo 'Gemini 1.5 Flash' esté disponible para ti." 
+        });
+      }
+      return res.status(200).json({ text: `Error: ${data.error.message}` });
     }
 
-    const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "No recibí respuesta.";
+    const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Sin respuesta del modelo.";
     return res.status(200).json({ text: aiText });
 
   } catch (error) {
-    return res.status(200).json({ text: "Error: " + error.message });
+    return res.status(200).json({ text: "Error de conexión: " + error.message });
   }
 };
