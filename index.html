@@ -123,12 +123,11 @@
 
     <script>
         /**
-         * SEGURIDAD Y CONFIGURACIÓN PARA NETLIFY/GITHUB
-         * Se utiliza gemini-1.5-flash para máxima compatibilidad fuera del entorno de preview.
+         * CONFIGURACIÓN PARA EL ENTORNO DE PREVIEW
+         * Se utiliza el modelo gemini-2.5-flash-preview-09-2025 que es el soportado.
          */
         
-        const _k = ["AIzaSyCXFK8AC", "vbUAyve5e-D6S", "HOcHex6xVbpc4"];
-        const getCredentials = () => _k.join('');
+        const apiKey = ""; // El entorno proporciona la clave automáticamente
 
         function sanitizeInput(text) {
             const div = document.createElement('div');
@@ -136,10 +135,9 @@
             return div.innerHTML.slice(0, 800); 
         }
 
-        async function callGemini(prompt, systemMsg, retries = 3) {
-            const apiKey = getCredentials();
-            // Modelo de producción estable para Netlify/GitHub
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        async function callGemini(prompt, systemMsg, retries = 5) {
+            // URL específica para el modelo soportado en el entorno de Canvas
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
             
             const sanitizedPrompt = sanitizeInput(prompt);
 
@@ -150,12 +148,10 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             contents: [{ 
-                                role: "user",
-                                parts: [{ text: `Instrucción del sistema: ${systemMsg}\n\nEntrada del usuario: ${sanitizedPrompt}` }] 
+                                parts: [{ text: sanitizedPrompt }] 
                             }],
-                            generationConfig: {
-                                temperature: 0.3,
-                                maxOutputTokens: 800
+                            systemInstruction: {
+                                parts: [{ text: systemMsg }]
                             }
                         })
                     });
@@ -163,10 +159,10 @@
                     const data = await response.json();
 
                     if (!response.ok) {
-                        console.error("API Error:", data);
-                        if (response.status === 400) throw new Error("Configuración de modelo inválida.");
-                        if (response.status === 429) throw new Error("Límite de cuota excedido.");
-                        throw new Error("Fallo en la comunicación con el servidor.");
+                        console.error("Gemini API Error Detail:", data);
+                        if (response.status === 404) throw new Error("Modelo no encontrado.");
+                        if (response.status === 429) throw new Error("Límite de cuota.");
+                        throw new Error(`Error: ${response.status}`);
                     }
 
                     const resultText = data.candidates?.[0]?.content?.parts?.[0]?.text;
@@ -177,9 +173,10 @@
                 } catch (err) {
                     console.warn(`Intento ${i + 1} fallido: ${err.message}`);
                     if (i === retries - 1) {
-                        return "Por el momento no puedo procesar su solicitud. Por favor, contacte a un asesor humano directamente al 638 112 4294.";
+                        return "Lo sentimos, el sistema de IA no está disponible. Contacte al 638 112 4294.";
                     }
-                    await new Promise(r => setTimeout(r, 1500));
+                    // Exponential backoff
+                    await new Promise(r => setTimeout(r, 1000 * Math.pow(2, i)));
                 }
             }
         }
@@ -192,10 +189,10 @@
             if (!input.value.trim()) return;
             
             res.classList.remove('hidden');
-            res.innerHTML = '<div class="flex items-center gap-2"><i class="fas fa-circle-notch animate-spin"></i> Analizando situación...</div>';
+            res.innerHTML = '<div class="flex items-center gap-2 text-blue-600 font-medium"><i class="fas fa-spinner animate-spin"></i> Analizando situación...</div>';
             btn.disabled = true;
             
-            const system = "Actúa como consultor migratorio de VIAJA USA. Analiza los lazos del usuario en español de forma seria y concisa. No uses lenguaje informal. Recomienda llamar al 6381124294.";
+            const system = "Actúa como consultor migratorio senior de VIAJA USA. Analiza los lazos económicos y familiares en español. Proporciona una evaluación honesta sobre la probabilidad de éxito. Termina sugiriendo una cita al 6381124294.";
             
             const response = await callGemini(input.value, system);
             res.innerText = response;
@@ -210,10 +207,10 @@
             if (!input.value.trim()) return;
 
             res.classList.remove('hidden');
-            res.innerHTML = '<div class="flex items-center gap-2"><i class="fas fa-circle-notch animate-spin"></i> Redactando borrador...</div>';
+            res.innerHTML = '<div class="flex items-center gap-2 text-red-600 font-medium"><i class="fas fa-spinner animate-spin"></i> Redactando carta formal...</div>';
             btn.disabled = true;
             
-            const system = "Eres un redactor jurídico. Crea un borrador de carta de motivos para visa basado en el propósito del usuario. Usa un tono muy formal y profesional en español.";
+            const system = "Eres redactor jurídico de VIAJA USA. Crea un borrador formal de carta de motivos para visa en español. Usa lenguaje profesional y diplomático.";
             
             const response = await callGemini(input.value, system);
             res.innerText = response;
@@ -234,11 +231,11 @@
             const typingDiv = document.createElement('div');
             typingDiv.id = typingId;
             typingDiv.className = 'flex justify-start';
-            typingDiv.innerHTML = '<div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-100 text-xs italic text-gray-400">Consultando base de datos...</div>';
+            typingDiv.innerHTML = '<div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-100 text-xs italic text-gray-400">VIAJA USA respondiendo...</div>';
             box.appendChild(typingDiv);
             box.scrollTop = box.scrollHeight;
 
-            const system = "Asistente de VIAJA USA. Responde dudas sobre visas y pasaportes en español de forma seria. Si la duda es compleja, pide llamar al 6381124294.";
+            const system = "Asistente Virtual de VIAJA USA en Puerto Peñasco. Responde dudas sobre visas y pasaportes en español. Tono experto y amable. Redirige a atención humana al 6381124294 para casos específicos.";
             
             const response = await callGemini(userMsg, system);
             
