@@ -130,17 +130,19 @@ async function callGemini(prompt, systemMsg) {
         });
 
         const data = await response.json();
-        if (!response.ok) {
-            console.error("Error de la API:", data);
-            throw new Error(data.error || "Error desconocido");
+
+        // Verificamos si la respuesta tiene la propiedad 'text'
+        if (data && data.text) {
+            return data.text;
+        } else {
+            console.error("Respuesta inesperada:", data);
+            return "Lo siento, la IA envió un formato de respuesta incorrecto.";
         }
-        return data.text;
     } catch (err) {
-        console.error("Error en fetch:", err);
-        return "Error: " + err.message;
+        console.error("Error en la conexión:", err);
+        return "Lo siento, no pude conectar con el servidor.";
     }
 }
-
         async function analyzeProfile() {
             const input = document.getElementById('profile-text');
             const res = document.getElementById('analysis-result');
