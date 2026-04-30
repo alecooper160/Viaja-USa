@@ -121,21 +121,23 @@
     </div>
 
     <script>
-        async function callGemini(prompt, systemMsg) {
-            try {
-                // Llamamos a la funcion de Netlify, no a Google directamente
-                const response = await fetch('/.netlify/functions/gemini-proxy', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt, systemMsg })
-                });
-                const data = await response.json();
-                if (!response.ok) throw new Error(data.error);
-                return data.text;
-            } catch (err) {
-                return "Lo siento, hay un problema técnico. Por favor intenta más tarde.";
-            }
-        }
+async function callGemini(prompt, systemMsg) {
+    try {
+        // En Vercel la ruta es /api/nombre-del-archivo
+        const response = await fetch('/api/gemini-proxy', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt, systemMsg })
+        });
+
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "Error");
+        return data.text;
+    } catch (err) {
+        console.error(err);
+        return "Lo siento, hubo un problema al conectar con el asistente.";
+    }
+}
 
         async function analyzeProfile() {
             const input = document.getElementById('profile-text');
