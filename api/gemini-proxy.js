@@ -13,15 +13,15 @@ module.exports = async (req, res) => {
       return res.status(200).json({ text: "Error: No configuraste la GEMINI_API_KEY en Vercel." });
     }
 
-    // Usamos 'gemini-pro', que es el nombre con mayor compatibilidad histórica
+    // Usaremos v1beta y gemini-1.5-pro, que es el más flexible con las regiones
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents: [{
-            parts: [{ text: `${systemMsg}\n\n${prompt}` }]
+            parts: [{ text: `INSTRUCCIONES: ${systemMsg}\n\nPREGUNTA: ${prompt}` }]
           }]
         })
       }
@@ -30,13 +30,13 @@ module.exports = async (req, res) => {
     const data = await response.json();
 
     if (data.error) {
-      // Si el error persiste, intentamos con una ruta alternativa por si tu cuenta es muy reciente
+      // Si esto falla, el error nos dirá si es por localización o permisos
       return res.status(200).json({ 
-        text: `Error de Google (${data.error.code}): ${data.error.message}` 
+        text: `Aviso del sistema: ${data.error.message} (Código: ${data.error.status})` 
       });
     }
 
-    const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "El modelo no devolvió texto.";
+    const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "El sistema no pudo generar una respuesta en este momento.";
     return res.status(200).json({ text: aiText });
 
   } catch (error) {
