@@ -1,7 +1,5 @@
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-
 module.exports = async (req, res) => {
-  // Configuración de cabeceras para evitar bloqueos
+  // Configuración de cabeceras CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -16,34 +14,39 @@ module.exports = async (req, res) => {
 
   try {
     const { prompt, systemMsg } = req.body;
-    
-    if (!process.env.GEMINI_API_KEY) {
+    const apiKey = process.env.GEMINI_API_KEY;
+
+    if (!apiKey) {
       return res.status(500).json({ error: 'Falta la clave GEMINI_API_KEY en Vercel' });
     }
 
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    
-    // Usamos 'gemini-1.5-flash-latest' que es el endpoint más estable actualmente
-    const model = genAI.getGenerativeModel({ 
-        model: "gemini-1.5-flash-latest" 
-    });
+    // Usamos FETCH directo a Google, saltándonos la librería problemática
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{
+            parts: [{ text: `INSTRUCCIONES: ${systemMsg}\n\nPREGUNTA: ${prompt}` }]
+          }]
+        })
+      }
+    );
 
-    // Construimos el mensaje incluyendo las instrucciones del sistema al principio
-    // Esto evita el error 404 de compatibilidad con systemInstruction en ciertas versiones
-    const fullPrompt = `INSTRUCCIONES DE SISTEMA: ${systemMsg}\n\nUSUARIO: ${prompt}`;
+    const data = await response.json();
 
-    const result = await model.generateContent(fullPrompt);
-    const response = await result.response;
-    const text = response.text();
+    if (!response.ok) {
+      console.error("Error de Google:", data);
+      return res.status(response.status).json({ error: data.error?.message || 'Error de Google' });
+    }
+
+    const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "No recibí respuesta.";
     
-    return res.status(200).json({ text: text });
+    return res.status(200).json({ text: aiText });
 
   } catch (error) {
-    console.error("Error detallado:", error);
-    // Si el error es específicamente un 404, intentamos con el modelo Pro por si el Flash está saturado
-    return res.status(500).json({ 
-      error: 'Error de comunicación con Google',
-      message: error.message 
-    });
+    console.error("Error en el Proxy:", error);
+    return res.status(500).json({ error: 'Error interno', message: error.message });
   }
 };
